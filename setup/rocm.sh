@@ -79,5 +79,4 @@ mkdir -p $BUILD/test
 cd $BUILD/test
 wget https://gist.githubusercontent.com/scchan/540d410456e3e2682dbf018d3c179008/raw/f12152f8a79a577b1afb4454b849dae0f76a124d/saxpy.cpp
 hcc `hcc-config --cxxflags --ldflags` saxpy.cpp -o saxpy
-./saxpy
-#
+LD_LIBRARY_PATH=$INSTALL/lib ./saxpy
