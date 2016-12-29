@@ -9,7 +9,7 @@
 ##   apt-get -t jessie-backports install make python2.7 fakeroot libc++abi-dev
 #
 
-THREADS=1
+THREADS=4
 BUILD="$HOME/tmp/rocm"
 INSTALL="/opt/rocm_master_d"
 GITHUB="https://github.com/RadeonOpenCompute"
