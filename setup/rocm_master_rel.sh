@@ -6,12 +6,12 @@
 ## some requirements
 ##   apt-get -t jessie-backports install libc++-dev libc++1 libelf1 libelf-dev git 
 ##   apt-get -t jessie-backports install libdw1 texinfo autoconf wget g++-multilib 
-##   apt-get -t jessie-backports install make python2.7 fakeroot libc++abi-dev libpci-dev
+##   apt-get -t jessie-backports install make python2.7 fakeroot libc++abi-dev
 #
 
-THREADS=20
+THREADS=1
 BUILD="$HOME/tmp/rocm"
-INSTALL="/opt/rocm_1.3.1_r"
+INSTALL="/opt/rocm_master_r"
 GITHUB="https://github.com/RadeonOpenCompute"
 set -ex
 
@@ -54,7 +54,8 @@ for f in $(find $BUILD/runtime/build -name "libhsa*.so*"); do ln -fs $f; done
 
 cd $BUILD
 [ ! -d devlibs ] && git clone --depth 1 $GITHUB/ROCm-Device-Libs devlibs
-rm -rf devlibs/build && mkdir -p devlibs/build && cd devlibs/build
+rm -rf devlibs/build && mkdir -p devlibs/build && 
+cd devlibs/build
 CC=$LLVM_BUILD/bin/clang cmake -DCMAKE_BUILD_TYPE=Release \
                 -DCMAKE_INSTALL_PREFIX=$INSTALL/dlibs -DLLVM_DIR=$LLVM_BUILD ..
 CC=$LLVM_BUILD/bin/clang make -j$THREADS
@@ -70,15 +71,15 @@ CC=$LLVM_BUILD/bin/clang make -j$THREADS world
 CC=$LLVM_BUILD/bin/clang make -j$THREADS
 CC=$LLVM_BUILD/bin/clang make install
 
-rm -rf /opt/rocm
-ln -s $INSTALL /opt/rocm
-ln -s /opt/rocm/hcc/bin /opt/rocm/bin
-ln -s /opt/rocm/hcc/include/ /opt/rocm/hcc/include/hcc
+# rm -rf /opt/rocm
+# ln -s $INSTALL /opt/rocm
+# ln -s /opt/rocm/hcc/bin /opt/rocm/bin
+# ln -s /opt/rocm/hcc/include/ /opt/rocm/hcc/include/hcc
 
-export PATH=/opt/rocm/hcc/bin:$PATH
+# export PATH=/opt/rocm/hcc/bin:$PATH
 
-mkdir -p $BUILD/test
-cd $BUILD/test
-wget https://gist.githubusercontent.com/scchan/540d410456e3e2682dbf018d3c179008/raw/f12152f8a79a577b1afb4454b849dae0f76a124d/saxpy.cpp
-hcc `hcc-config --cxxflags --ldflags` saxpy.cpp -o saxpy
-LD_LIBRARY_PATH=$INSTALL/lib ./saxpy
+# mkdir -p $BUILD/test
+# cd $BUILD/test
+# wget https://gist.githubusercontent.com/scchan/540d410456e3e2682dbf018d3c179008/raw/f12152f8a79a577b1afb4454b849dae0f76a124d/saxpy.cpp
+# hcc $(hcc-config --cxxflags --ldflags) saxpy.cpp -o saxpy
+# LD_LIBRARY_PATH=$INSTALL/lib ./saxpy
